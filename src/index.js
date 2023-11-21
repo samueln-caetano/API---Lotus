@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 
 import connectDatabase from "./database/db.js";
+import authRoute from "./routes/auth.route.js";
 
 dotenv.config();
 
@@ -11,6 +12,9 @@ app.use(express.json());
 app.use(cors());
 
 connectDatabase();
+
+app.use("/signUp", authRoute);
+app.use("/signIn", authRoute);
 
 app.listen(process.env.PORT, () => {
   console.log("Server is runnig on port:", process.env.PORT);
