@@ -74,7 +74,6 @@ const updateTask = async (req, res) =>{
   }
 }
 
-
 const removeTask = async (req, res) => {
   try {
     const { userId, taskId } = req.params;
