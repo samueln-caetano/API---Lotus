@@ -66,13 +66,36 @@ const findById = async (req, res) => {
   }
 };
 
-const updateTask = async (req, res) =>{
+const updateTask = async (req, res) => {
   try {
-    
+    const { userId, taskId } = req.params;
+    const taskData = req.body;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).send({ message: "User not found" });
+    }
+
+    const task = user.tasks.find((task) => {
+      return task._id == taskId;
+    });
+
+    if (!task) {
+      return res.status(404).send({ message: "Task not found" });
+    }
+
+    task.title = taskData.title;
+
+    await user.save();
+
+    console.log(task);
+
+    res.send({ message: "Task successfully updated" });
   } catch (err) {
     res.status(500).send({ message: err.message });
   }
-}
+};
 
 const removeTask = async (req, res) => {
   try {
@@ -92,7 +115,7 @@ const removeTask = async (req, res) => {
       return res.status(404).send({ message: "Task not found" });
     }
 
-    user.tasks.splice(task, 1);
+    user.tasks.pull(task);
 
     await user.save();
 
